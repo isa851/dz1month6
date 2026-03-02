@@ -19,6 +19,9 @@ from app.product.serializers import (
 from app.pagination import CustomPageNumberPagination
 from app.filters import ProductFilter
 
+from rest_framework.decorators import action
+from app.notification.models import Notification, NotificationType
+from app.notification.tasks import deliver_notification
 
 class ProductViewSet(mixins.ListModelMixin,
                     mixins.CreateModelMixin, 
@@ -114,3 +117,30 @@ class OrderViewSet(mixins.CreateModelMixin,
             return Order.objects.filter(courier=user).order_by("-id")
 
         return Order.object.filter(user=user).order_by("-id")
+
+    @action(detail=True, methods=["patch"], permission_classes=[IsAuthenticated])
+    def change_status(self, request, pk=None):
+        user = request.user
+
+        if not getattr(user, "is_manager", False):
+            return Response({"detail": "Only manager can change status"}, status=403)
+
+        order = self.get_object()
+        new_status = request.data.get("status")
+
+        if not new_status:
+            return Response({"detail": "Status required"}, status=400)
+
+        order.status = new_status
+        order.save(update_fields=["status"])
+
+        notif = Notification.objects.create(
+            user=order.user,
+            type=NotificationType.ORDER_STATUS_CHANGED,
+            title="Статус заказа изменен",
+            message=f"Ваш заказ №{order.id} теперь имеет статус: {new_status}"
+        )
+
+        deliver_notification.delay(notif.id)
+
+        return Response({"detail": "Status updated"})
