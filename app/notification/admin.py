@@ -1,4 +1,16 @@
 from django.contrib import admin
-from app.notification.models import Notification
+from .models import Notification
 
-admin.site.register(Notification)
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "type",
+        "title",
+        "is_read",
+        "created_at",
+    )
+    search_fields = ("user__email", "title", "message")
+    list_filter = ("type", "is_read", "created_at")
+    list_editable = ("is_read",)

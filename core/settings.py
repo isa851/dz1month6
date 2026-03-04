@@ -42,9 +42,48 @@ EMAIL_HOST_USER = 'isa904363@gmail.com'
 EMAIL_HOST_PASSWORD = 'gv866mkh74'
 DEFAULT_FROM_EMAIL = 'isa904363@gmail.com'
 
+JAZZMIN_SETTINGS = {
+    "site_title": "Clinic Admin",
+    "site_header": "Clinic Management System",
+    "site_brand": "Clinic",
+    "welcome_sign": "Добро пожаловать в панель управления",
+    "copyright": "Clinic 2026",
+
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+
+    "order_with_respect_to": [
+        "auth",
+        "services",
+        "cases",
+        "contacts",
+    ],
+
+    "icons": {
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "services.Services": "fas fa-tooth",
+        "cases.Cases": "fas fa-image",
+        "contacts.ContactsInfo": "fas fa-phone",
+    },
+
+    "hide_models": [
+        "auth.Group",
+    ],
+
+    "custom_links": {
+        "services": [{
+            "name": "Перейти на сайт",
+            "url": "/",
+            "icon": "fas fa-globe",
+        }]
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -4,6 +4,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.views import APIView
+# from django.s
 
 from app.users.permissions import IsManager, IsCourier, IsCustomer
 from app.product.models import Order, OrderStatus, Product, Favorite, Cart, CartItem
@@ -144,3 +146,7 @@ class OrderViewSet(mixins.CreateModelMixin,
         deliver_notification.delay(notif.id)
 
         return Response({"detail": "Status updated"})
+
+
+# class OrderStatusViewSet(ViewSet):
+

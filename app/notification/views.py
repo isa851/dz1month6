@@ -33,3 +33,5 @@ class NotificationReadAPI(ViewSet):
         notif.is_read = True
         notif.save(update_fields=["is_read"])
         return Response({"ok": True}, status=status.HTTP_200_OK)
+
+# celery  - это асинхронная очередь задач
